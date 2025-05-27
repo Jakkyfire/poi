@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily Points System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    .popup-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .popup {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .popup button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .popup button:hover {
+      background: #45a049;
+    }
+
+    .points-box {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+      font-size: 14px;
+      z-index: 9999;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Popup Section -->
+  <div class="popup-container" id="popupContainer">
+    <div class="popup" id="popup">
+      <h2>Claim Your Daily Points!</h2>
+      <p>Click the button below to claim your points.</p>
+      <button onclick="claimPoints()">Claim Points</button>
+    </div>
+  </div>
+
+  <!-- Points Display -->
+  <div class="points-box" id="pointsBox">
+    Points: <span id="points">0</span>
+  </div>
+
+  <!-- Sound Effect -->
+  <audio id="claimSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
+
+  <script>
+    function claimPoints() {
+      let points = localStorage.getItem('points') || 10;
+      let lastClaimDate = localStorage.getItem('lastClaimDate');
+      let today = new Date().toISOString().split('T')[0];
+
+      if (lastClaimDate !== today) {
+        points = points * 2;
+        localStorage.setItem('points', points);
+        localStorage.setItem('lastClaimDate', today);
+        document.getElementById('points').innerText = points;
+        document.getElementById('claimSound').play();
+        document.getElementById('popupContainer').classList.add('hidden');
+      } else {
+        alert('You have already claimed your points for today.');
+      }
+    }
+
+    window.onload = function () {
+      let points = localStorage.getItem('points') || 0;
+      document.getElementById('points').innerText = points;
+
+      let lastClaimDate = localStorage.getItem('lastClaimDate');
+      let today = new Date().toISOString().split('T')[0];
+
+      if (lastClaimDate === today) {
+        document.getElementById('popupContainer').classList.add('hidden');
+      }
+    };
+  </script>
+</body>
+</html>
